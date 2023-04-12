@@ -25,53 +25,6 @@ to project that you want to launch pipeline:
 '''
 
 
-GQL_CREATE_PIPELINE_ENV_VAR = """
-mutation replaceEnvironmentVariablesByRawForScope($entityId: UUID, 
-                                                  $scope: EnvVarScope!, 
-                                                  $rawEnvironmentVariables: String!) {  
-    replaceEnvironmentVariablesByRawForScope(
-        entityId: $entityId, 
-        scope: $scope, 
-        rawEnvironmentVariables: 
-        $rawEnvironmentVariables
-    ) {    
-        id
-        scope
-        name
-        value
-    }
-}
-"""
-
-
-def bulk_create_for_pipeline(saagie_client, pipeline_id, env_vars):
-    """Delete all existing env vars and create new ones for the pipeline
-    Parameters
-    ----------
-    pipeline_id : str
-        Pipeline ID
-    env_vars : Dict
-        Dict that contains all the variables for the pipeline
-    Returns
-    -------
-    dict
-        Dict of created environment variables for pipeline
-    """
-
-    # need to transform the dict in parameter to a string with the following format"var1=val1\nvar2=val2"
-    var_str = "".join(f"{key}={env_vars[key]}\n" for key in env_vars)
-
-    params = {
-        "entityId": pipeline_id,
-        "scope": "PIPELINE",
-        "rawEnvironmentVariables": var_str,
-    }
-
-    result = saagie_client.client.execute(query=gql(GQL_CREATE_PIPELINE_ENV_VAR), variable_values=params)
-    logging.info("✅ Environment variables for pipeline [%s] successfully created", pipeline_id)
-    return result
-
-
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, url_base_pathname=os.environ["SAAGIE_BASE_PATH"]+"/")
 
 
@@ -116,7 +69,7 @@ def run_piepline(n_clicks, nb_pipelines, project_name, pipeline_name, env_vars):
     if button_pressed:
         pipeline_id = saagie_client.pipelines.get_id(pipeline_name=pipeline_name, project_name=project_name)
         if env_vars:
-            bulk_create_for_pipeline(saagie_client, pipeline_id, json.loads(env_vars))
+            saagie_client.env_vars.bulk_create_for_pipeline(saagie_client, pipeline_id, json.loads(env_vars))
         list_pipeline_status = []
         for i in range(int(nb_pipelines)):
             status = saagie_client.pipelines.run_with_callback(pipeline_id=pipeline_id)
