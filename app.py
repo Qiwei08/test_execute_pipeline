@@ -69,7 +69,7 @@ def run_piepline(n_clicks, nb_pipelines, project_name, pipeline_name, env_vars):
     if button_pressed:
         pipeline_id = saagie_client.pipelines.get_id(pipeline_name=pipeline_name, project_name=project_name)
         if env_vars:
-            saagie_client.env_vars.bulk_create_for_pipeline(saagie_client, pipeline_id, json.loads(env_vars))
+            saagie_client.env_vars.bulk_create_for_pipeline(pipeline_id, json.loads(env_vars))
         list_pipeline_status = []
         for i in range(int(nb_pipelines)):
             status = saagie_client.pipelines.run_with_callback(pipeline_id=pipeline_id)
