@@ -5,12 +5,7 @@ from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import os
 from saagieapi import SaagieApi
-import json
-from gql import gql
-import logging
 
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 markdown_text = '''
 ### Launch Saagie Pipeline APP
