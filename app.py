@@ -80,7 +80,7 @@ def run_piepline(n_clicks, nb_pipelines, project_name, pipeline_name, tube_name,
 
         for i in range(int(nb_pipelines)):
             if (int(nb_pipelines) > 1) & (i > 1):
-                json_data["diameter"] = diameter + i
+                json_data["diameter"] = float(diameter) + i
                 saagie_client.env_vars.bulk_create_for_pipeline(pipeline_id, json_data)
             status = saagie_client.pipelines.run_with_callback(pipeline_id=pipeline_id)
             list_pipeline_status.append(status)
