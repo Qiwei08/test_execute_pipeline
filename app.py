@@ -202,9 +202,9 @@ app.layout = dbc.Container(children=[
     dbc.Row(
         dbc.Col(
             dcc.Markdown(id="output-execution"),
-            style={"offset": 1, 'color': text_color2},
-            justify="left",
-        )
+        ),
+        style={"offset": 1, 'color': text_color2},
+        justify="left",
     ),
     dbc.Row(html.Br(), class_name=".mb-4"),
     dbc.Row(id="postgresql_table"),
