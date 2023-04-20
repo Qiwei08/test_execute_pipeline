@@ -128,7 +128,7 @@ app.layout = dbc.Container(children=[
         dbc.Col([
             dbc.Row(dbc.Button("⟳ Refresh", id="refresh", n_clicks=0, size='sm', href='/',
                                style={"height": 30, "width": 100, "font-size": 12,
-                                      "color": "#132d81", "background-color": "White"})
+                                      "color": "#132d81", "background-color": "White", 'margin-top': '30px'})
                     , justify="center"),
         ], width=2),
 
@@ -198,10 +198,12 @@ app.layout = dbc.Container(children=[
             )
 
         ]),
+    dbc.Row(html.Br(), class_name=".mb-4"),
     dbc.Row(
         dbc.Col(
             dcc.Markdown(id="output-execution"),
-            style={"padding": 10}
+            style={"offset": 1, 'color': text_color2},
+            justify="left",
         )
     ),
     dbc.Row(html.Br(), class_name=".mb-4"),
