@@ -91,9 +91,10 @@ def run_piepline(n_clicks, nb_pipelines, project_name, pipeline_name, tube_name,
         return ""
 
 
-@app.callback(Output('postgresql_table', 'children'),
-              [Input('refresh', 'n_clicks')])
-def populate_datatable(refresh):
+@app.callback(Output(component_id='postgresql_table', component_property='children'),
+              [Input(component_id='refresh', component_property='n_clicks'),
+               Input(component_id='output-execution', component_property='children')])
+def populate_datatable(refresh, output):
     df = pd.read_sql(f'SELECT * FROM  tb_tube', pg_engine)
     dt = dash_table.DataTable(df.to_dict('records'),
                               [{"name": i, "id": i} for i in df.columns],
@@ -105,7 +106,7 @@ def populate_datatable(refresh):
     return dt
 
 
-app.layout = dbc.Container(children=[
+app.layout = dbc.Container(fluid=True, children=[
     dbc.Tooltip(
         "Name of the tube, should be a text ",
         target="env-vars-tube-name",
@@ -120,27 +121,29 @@ app.layout = dbc.Container(children=[
         target="nb-pipeline",
     ),
     dbc.Row([
+        dbc.Col(dbc.CardImg(src="assets/saipem_logo.png", top=True, style={"height": 40, "width": 60, 'margin-top': '5%'},), width=4),
         dbc.Col([dbc.Row(
-            html.H2("Saagie Pipeline APP"),
-            style={"offset": 1, 'color': text_color, 'margin-top': '30px'},
-            justify="left")
-        ]),
+            html.H2("Saipem Spidev Pipeline APP", style={'color': text_color}),
+            style={'color': text_color, 'margin-top': '5%'},
+            justify="center")
+        ], width=4),
         dbc.Col([
             dbc.Row(dbc.Button("⟳ Refresh", id="refresh", n_clicks=0, size='sm', href='/',
-                               style={"height": 30, "width": 100, "font-size": 12,
-                                      "color": "#132d81", "background-color": "White", 'margin-top': '30px'})
+                               style={"height": 40, "width": 100, "font-size": 12,
+                                      "color": "#132d81", "background-color": "White", 'margin-top': '5%'})
                     , justify="center"),
-        ], width=2),
+        ], width=4),
 
     ],
-        style={'color': text_color}),
+        style={"offset": 1, 'color': text_color, 'margin-bottom': '1%'}),
     # Description
     dbc.Row(
         [
-            html.H6("A interface that user can use to execute Saagie pipelines")
+            html.P("A interface that user can use to execute Saagie pipelines and get results",
+                   style={'color': text_color2, "text-transform": None, })
         ],
-        style={"offset": 1, 'color': text_color2},
-        justify="left",
+        style={'color': text_color2, 'margin-left': '30%'},
+        justify="center",
     ),
     dbc.Row(html.Br(), class_name=".mb-4"),
 
@@ -152,15 +155,16 @@ app.layout = dbc.Container(children=[
                 html.P('Saagie Project'),
                 dcc.Dropdown(projects_name,
                              id="project-dropdown",
-                             style={'height': '20%'},
+                             style={'height': '20%', 'width': '100%'},
                              ),
                 html.P('Saagie Pipeline'),
-                dcc.Dropdown(id="pipelines", style={'height': '20%'}),
+                dcc.Dropdown(id="pipelines", style={'height': '20%', 'width': '100%'}),
                 html.P('Number of execution of pipelines'),
                 dcc.Input(id="nb-pipeline", value='1', type='number', min=1, step=1, required=True,
-                          style={'height': '10%', 'width': '100%'}),
+                          style={'height': '10%', 'width': '50%'}),
             ],
-                style={"offset": 1, 'margin-top': '40px', 'color': text_color, "border-right": "1px solid #d9dbe3"},
+                style={"offset": 1, 'margin-top': '40px', 'margin-left': '2%',
+                       'color': text_color, "border-right": "1px solid #d9dbe3"},
             ),
 
             # Right
@@ -194,7 +198,7 @@ app.layout = dbc.Container(children=[
                         ),
 
             ],
-                style={'color': text_color}
+                style={'color': text_color, 'margin-right': '2%'}
             )
 
         ]),
@@ -203,11 +207,11 @@ app.layout = dbc.Container(children=[
         dbc.Col(
             dcc.Markdown(id="output-execution"),
         ),
-        style={"offset": 1, 'color': text_color2},
+        style={'color': text_color2, 'margin-left': '30%', 'margin-bottom': '2%'},
         justify="left",
     ),
     dbc.Row(html.Br(), class_name=".mb-4"),
-    dbc.Row(id="postgresql_table"),
+    dbc.Row(id="postgresql_table", style={'margin-left': '2%', 'margin-right': '2%',}),
     dbc.Row(html.Br(), class_name=".mb-4"),
 
 
