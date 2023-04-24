@@ -23,8 +23,7 @@ border_color = "#D9DBE3"
 border_radius = 6
 btn_style = {"height": 40, "width": 100, "border-radius": border_radius}
 
-
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX], url_base_pathname=os.environ["SAAGIE_BASE_PATH"]+"/")
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], url_base_pathname=os.environ["SAAGIE_BASE_PATH"]+"/")
 
 postgresql_string_connecion = f'postgresql://{postgresql_user}:{postgresql_pwd}@{postgresql_host}:{postgresql_port}/{postgresql_db}?sslmode=require'
 pg_engine = create_engine(postgresql_string_connecion)
@@ -120,30 +119,33 @@ app.layout = dbc.Container(fluid=True, children=[
         "If number > 1, then diameter will be incremented by 1 in each execution",
         target="nb-pipeline",
     ),
-    dbc.Row([
-        dbc.Col(dbc.CardImg(src="assets/saipem_logo.png", top=True, style={"height": 40, "width": 60, 'margin-top': '5%'},), width=4),
-        dbc.Col([dbc.Row(
-            html.H2("Saipem Spidev Pipeline APP", style={'color': text_color}),
-            style={'color': text_color, 'margin-top': '5%'},
-            justify="center")
-        ], width=4),
-        dbc.Col([
-            dbc.Row(dbc.Button("⟳ Refresh", id="refresh", n_clicks=0, size='sm', href='/',
-                               style={"height": 40, "width": 100, "font-size": 12,
-                                      "color": "#132d81", "background-color": "White", 'margin-top': '5%'})
-                    , justify="center"),
-        ], width=4),
+    dbc.Navbar(
+        dbc.Container(
+            [
+                html.A(
+                    # Use row and col to control vertical alignment of logo / brand
+                    dbc.Row(
+                        [
+                            dbc.Col(html.Img(src="assets/saipem_logo.png", height="50px")),
+                            dbc.Col(dbc.NavbarBrand("Saipem Spidev App", className="ms-3", style={"color": text_color})),
+                        ],
+                        align="center",
+                        className="g-0",
+                    ),
+                    href="https://www.saipem.fr/",
+                    style={"textDecoration": "none", "margin-left": "0px"},
+                ),
+                dbc.Button("⟳ Refresh", id="refresh", n_clicks=0, size='mb', href='/',
+                           color="dark",
+                           outline=True,
+                           style={"height": "1%", "font-size": 14, "width": "10",
+                                  "border-radius": border_radius})
 
-    ],
-        style={"offset": 1, 'color': text_color, 'margin-bottom': '1%'}),
-    # Description
-    dbc.Row(
-        [
-            html.P("A interface that user can use to execute Saagie pipelines and get results",
-                   style={'color': text_color2, "text-transform": None, })
-        ],
-        style={'color': text_color2, 'margin-left': '30%'},
-        justify="center",
+            ],
+        ),
+        color="#b8c9e1",
+        className="mb-1",
+        expand=True
     ),
     dbc.Row(html.Br(), class_name=".mb-4"),
 
